@@ -1,0 +1,16 @@
+{
+  "name": "fireclay",
+  "version": "0.0.1",
+  "description": "Library for basic shape composition and functions for intersections, overlaps, and containment",
+  "main": "src/index.js",
+  "test": "jasmine",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jasmine"
+  },
+  "author": "Jonathan Walker",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^4.3.0"
+  }
+}
