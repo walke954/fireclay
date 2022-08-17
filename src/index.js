@@ -8,6 +8,7 @@ const Shape = require('./Shape.js');
 const Polygon = require('./Polygon.js');
 const Ray = require('./Ray.js');
 const Segment = require('./Segment.js');
+const SpaceTree = require('./SpaceTree.js');
 
 module.exports = {
 	AABB,
@@ -19,5 +20,6 @@ module.exports = {
 	Shape,
 	Polygon,
 	Ray,
-	Segment
+	Segment,
+	SpaceTree
 };

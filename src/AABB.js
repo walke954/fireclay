@@ -49,15 +49,19 @@ class AABB extends Polygon {
 	}
 
 	containsAABB(bx) {
-		const containsX = this.x <= bx.x && this.x + this.w > bx.x + bx.w;
-		const containsY = this.y <= bx.y && this.y + this.h > bx.y + bx.h;
+		const containsX = this.x <= bx.x && this.x + this.w >= bx.x + bx.w;
+		const containsY = this.y <= bx.y && this.y + this.h >= bx.y + bx.h;
 		return containsX && containsY;
 	}
 
+	overlapsPoint(pt) {
+		return pt.overlapsAABB(this);
+	}
+
 	overlapsAABB(bx) {
-		return this.containsAABB(bx)
-			|| bx.containsAABB(this)
-			|| this.intersectsAABB(bx);
+		const interX = this.x + this.w < bx.x || bx.x + bx.w < this.x;
+		const interY = this.y + this.h < bx.y || bx.y + bx.h < this.y;
+		return !interX || !interY;
 	}
 }
 

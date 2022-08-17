@@ -128,15 +128,17 @@ class Point extends Geometry {
 	}
 
 	overlapsPolygon(py) {
-		return this.overlapsPolygon(py);
+		return py.overlapsPoint(this);
 	}
 
 	overlapsAABB(bx) {
-		return this.overlapsAABB(bx);
+		const interX = bx.x < this.x && bx.x + bx.w > this.x;
+		const interY = bx.y < this.y && bx.y + bx.h > this.y;
+		return interX && interY;
 	}
 
 	overlapsCircle(ce) {
-		return this.overlapsCircle(ce);
+		return ce.overlapsPoint(pt);
 	}
 }
 

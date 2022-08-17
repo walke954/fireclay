@@ -140,7 +140,6 @@ class Polygon extends Shape {
 
 		// find number of intersects
 		const count = this.segments.reduce((c, sg) => {
-			console.log(ry.intersectsSegment(sg), ry.a, ry.b, ry.c, sg.a, sg.b, sg.c)
 			return ry.intersectsSegment(sg) ? c + 1 : c;
 		}, 0);
 

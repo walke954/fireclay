@@ -2,6 +2,7 @@ var Geometry = require('./Geometry.js');
 var Linear = require('./Linear.js');
 var Point = require('./Point.js');
 var Line = require('./Line.js');
+var Segment = require('./Segment.js');
 
 class Ray extends Linear {
 	#origin;
@@ -60,41 +61,83 @@ class Ray extends Linear {
 	}
 
 	intersectsRay(ry2, getValues = false) {
-		const pt = this.line.intersectsRay(ry2, true);
-		if (!pt) {
+		const g = this.line.intersectsRay(ry2, true);
+		if (!g) {
 			return getValues ? null : false;
 		}
-		return this.intersectsPoint(pt[0], getValues);
+		if (g.isRay) {
+			const signX = Math.sign(g.origin.x - this.origin.x);
+			const intersects = this.signX === signX || signX === 0;
+
+			if (!getValues) return intersects;
+			if (!intersects) return null;
+
+			if (this.signX === g.signX) {
+				return g.copy;
+			}
+
+			return new Segment(this.origin, g.origin);
+		}
+		return this.intersectsPoint(g[0], getValues);
 	}
 
 	intersectsSegment(sg, getValues = false) {
-		const pt = sg.line.intersectsRay(this, true);
-		if (!pt) {
+		let g = sg.line.intersectsRay(this, true);
+		if (!g) {
 			return getValues ? null : false;
 		}
-		return pt[0].intersectsSegment(sg, getValues);
+
+		g = g[0];
+		if (g.isSegment) {
+			const noOriginInter =
+				Geometry.greaterThen(this.origin.x, g.maxX)
+				|| Geometry.lessThen(this.origin.x, g.minX)
+			const noIntersect =
+				noOriginInter && Math.sign(g.minX - this.origin.x) !== this.signX;
+
+			if (noIntersect) {
+				return getValues ? null : false;
+			}
+
+			if (!getValues) {
+				return true;
+			}
+
+			if (noOriginInter) {
+				return [sg.copy];
+			}
+
+			if (this.signX === -1) {
+				const minPt = sg.points.find(pt => pt.x === sg.minX);
+				return minPt.equals(this.origin)
+					? [this.origin.copy]
+					: [new Segment(minPt, this.origin)];
+			}
+
+			const maxPt = sg.points.find(pt => pt.x === sg.maxX);
+			return maxPt.equals(this.origin)
+				? [this.origin.copy]
+				: [new Segment(maxPt, this.origin)];
+		}
+
+		return g.intersectsSegment(sg, getValues);
 	}
 
 	intersectsPolygon(py, getValues = false) {
-		const map = new Map();
+		const vals = [];
 
 		for (let i = 0; i < py.segments.length; i += 1) {
 			const sg = py.segments[i];
-			let pt = this.intersectsSegment(sg, true);
-			if (pt) {
-				pt = pt[0];
-				map.set(pt.x, pt.y);
+			let g = this.intersectsSegment(sg, true);
+			if (g) {
+				vals.push(...g);
 				if (!getValues) break;
 			}
 		}
 
-		if (!getValues) return !!map.size;
+		if (!getValues) return !!vals.length;
 
-		const points = Array
-			.from(map.entries())
-			.map(([x, y]) => new Point(x, y));
-
-		return points.length ? points : null;
+		return vals.length ? vals : null;
 	}
 
 	intersectsAABB(bx, getValues = false) {

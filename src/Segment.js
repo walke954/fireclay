@@ -85,11 +85,37 @@ class Segment extends Linear {
 	}
 
 	intersectsSegment(sg, getValues = false) {
-		const pt = this.line.intersectsSegment(sg, true);
-		if (!pt) {
+		let g = this.line.intersectsSegment(sg, true);
+		if (!g) {
 			return getValues ? null : false;
 		}
-		return pt[0].intersectsSegment(this, getValues);
+
+		g = g[0];
+		if (g.isSegment) {
+			const noIntersect =
+				Geometry.greaterThen(this.minX, sg.maxX)
+				|| Geometry.lessThen(this.maxX, sg.minX);
+
+			if (noIntersect) {
+				return getValues ? null : false;
+			}
+
+			if (getValues) {
+				return true;
+			}
+
+			if (this.minX < sg.minX) {
+				const mn = sg.points.find(pt => pt.x === sg.minX);
+				const mx = this.points.find(pt => pt.x === this.maxX);
+				return [new Segment(mn, mx)];
+			}
+
+			const mn = this.points.find(pt => pt.x === this.minX);
+			const mx = sg.points.find(pt => pt.x === sg.maxX);
+			return [new Segment(mn, mx)];
+		}
+
+		return g.intersectsSegment(this, getValues);
 	}
 
 	intersectsPolygon(py, getValues = false) {
@@ -137,6 +163,10 @@ class Segment extends Linear {
 	}
 
 	overlapsSegment(sg) {
+		const equal = this.line.equals(sg.line);
+		if (equal) {
+			
+		}
 		return this.intersectsSegment(sg);
 	}
 

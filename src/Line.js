@@ -21,7 +21,13 @@ class Line extends Linear {
 
 	intersectsLine(ln2, getValues = false) {
 		const f = -(ln2.a / this.a);
-		const y = ((f * this.c) + ln2.c) / ((f * this.b) + ln2.b);
+		const y1 = ((f * this.c) + ln2.c);
+		const y2 = ((f * this.b) + ln2.b);
+		if (Geometry.equalTo(y1, 0) && Geometry.equalTo(y2, 0)) {
+			return getValues ? [this.copy] : true;
+		}
+
+		const y = y1 / y2;
 		if (isNaN(y) || y === Infinity || y === -Infinity) {
 			return getValues ? null : false;
 		}
@@ -40,6 +46,11 @@ class Line extends Linear {
 		if (!pt) {
 			return getValues ? null : false;
 		}
+
+		if (pt.isLine) {
+			return getValues ? [ry.copy] : true;
+		}
+
 		return pt[0].intersectsRay(ry, getValues);
 	}
 
@@ -48,29 +59,29 @@ class Line extends Linear {
 		if (!pt) {
 			return getValues ? null : false;
 		}
+
+		if (pt.isLine) {
+			return getValues ? [sg.copy] : true;
+		}
+
 		return pt[0].intersectsSegment(sg, getValues);
 	}
 
 	intersectsPolygon(py, getValues = false) {
-		const map = new Map();
+		const vals = [];
 
 		for (let i = 0; i < py.segments.length; i += 1) {
 			const sg = py.segments[i];
 			let pt = this.intersectsSegment(sg, true);
 			if (pt) {
-				pt = pt[0];
-				map.set(pt.x, pt.y);
+				vals.push(...pt);
 				if (!getValues) break;
 			}
 		}
 
-		if (!getValues) return !!map.size;
+		if (!getValues) return !!vals.length;
 
-		const points = Array
-			.from(map.entries())
-			.map(([x, y]) => new Point(x, y));
-
-		return points.length ? points : null;
+		return vals.length ? vals : null;
 	}
 
 	intersectsAABB(bx, getValues = false) {
@@ -87,10 +98,15 @@ class Line extends Linear {
 		const [inter] = perp.intersectsLine(this, true);
 
 		const d = Geometry.pythdist(inter.x, inter.y, ce.x, ce.y);
-		if (Geometry.greaterThenOrEqualTo(d, ce.r)) {
+
+		if (Geometry.greaterThen(d, ce.r)) {
 			return getValues ? null : false;
 		} else if (!getValues) {
 			return true;
+		}
+
+		if (Geometry.equalTo(d, ce.r)) {
+			return [inter];
 		}
 
 		if (d === 0) {
