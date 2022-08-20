@@ -19,12 +19,19 @@ class Line extends Linear {
 		return pt.intersectsLine(this, getValues);
 	}
 
-	intersectsLine(ln2, getValues = false) {
-		const f = -(ln2.a / this.a);
-		const y1 = ((f * this.c) + ln2.c);
-		const y2 = ((f * this.b) + ln2.b);
+	intersectsLine(ln, getValues = false) {
+		let ln1 = this;
+		let ln2 = ln;
+		if (ln1.a === 0) {
+			ln1 = ln;
+			ln2 = this;
+		}
+
+		const f = -(ln2.a / ln1.a);
+		const y1 = ((f * ln1.c) + ln2.c);
+		const y2 = ((f * ln1.b) + ln2.b);
 		if (Geometry.equalTo(y1, 0) && Geometry.equalTo(y2, 0)) {
-			return getValues ? [this.copy] : true;
+			return getValues ? [ln1.copy] : true;
 		}
 
 		const y = y1 / y2;
@@ -34,7 +41,7 @@ class Line extends Linear {
 
 		if (!getValues) return true;
 
-		const x = (this.c - (y * this.b)) / this.a;
+		const x = (ln1.c - (y * ln1.b)) / ln1.a;
 
 		return [
 			new Point(x, y)
@@ -85,7 +92,7 @@ class Line extends Linear {
 	}
 
 	intersectsAABB(bx, getValues = false) {
-		this.intersectsPolygon(bx, getValues);
+		return this.intersectsPolygon(bx, getValues);
 	}
 
 	intersectsCircle(ce, getValues = false) {
@@ -95,6 +102,11 @@ class Line extends Linear {
 			(this.b * ce.x) + (-this.a * ce.y)
 		);
 
+		if (!perp.intersectsLine(this, true)) {
+			console.log('hi')
+			console.log(perp.a, perp.b, perp.c)
+			console.log(this.a, this.b, this.c)
+		}
 		const [inter] = perp.intersectsLine(this, true);
 
 		const d = Geometry.pythdist(inter.x, inter.y, ce.x, ce.y);
@@ -160,7 +172,7 @@ class Line extends Linear {
 	}
 
 	overlapsAABB(bx) {
-		return this.intersectsAABB(bx);
+		return this.intersectsPolygon(bx);
 	}
 
 	overlapsCircle(ce) {

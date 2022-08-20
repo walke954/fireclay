@@ -31,8 +31,6 @@ class SpaceTree extends AABB {
 	}
 
 	#divide() {
-		this.#leaf = false;
-
 		const halfW = this.w / 2;
 		const halfH = this.w / 2;
 
@@ -105,12 +103,17 @@ class SpaceTree extends AABB {
 		this.#set.add(obj);
 		this.#size += 1;
 
-
 		if (this.#leaf) {
-			if (!this.#indivisible && this.#size <= this.#bucketSize) {
+			if (this.#indivisible || this.#size <= this.#bucketSize) {
 				return this;
 			}
+			this.#leaf = false;
 			this.#divide();
+			this.#set.forEach((g) => {
+				this.#children.forEach((child) => {
+					child.add(g);
+				});
+			});
 		}
 
 		this.#children.forEach((child) => {
@@ -142,16 +145,16 @@ class SpaceTree extends AABB {
 			return set;
 		}
 
-		const overlap = this.overlaps(g);
-		if (!overlap) {
-			return set;
-		}
-
-		const contains = this.contains(g);
+		const contains = g.contains(this);
 		if (contains) {
 			this.#set.forEach((obj) => {
 				set.add(obj);
 			});
+			return set;
+		}
+
+		const overlaps = g.overlaps(this);
+		if (!overlaps) {
 			return set;
 		}
 

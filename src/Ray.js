@@ -141,7 +141,7 @@ class Ray extends Linear {
 	}
 
 	intersectsAABB(bx, getValues = false) {
-		this.intersectsPolygon(bx, getValues);
+		return this.intersectsPolygon(bx, getValues);
 	}
 
 	intersectsCircle(ce, getValues = false) {
@@ -179,7 +179,7 @@ class Ray extends Linear {
 	}
 
 	overlapsAABB(bx) {
-		return this.intersectsAABB(bx);
+		return this.intersectsPolygon(bx);
 	}
 
 	overlapsCircle(ce) {

@@ -84,14 +84,6 @@ class Circle extends Shape {
 		return d < this.r;
 	}
 
-	overlapsLine(ln) {
-		return this.intersectsLine(ln);
-	}
-
-	overlapsRay(ry) {
-		return this.intersectsRay(ry);
-	}
-
 	containsSegment(sg) {
 		for (let i = 0; i < sg.points.length; i += 1) {
 			const pt = sg.points[i];
@@ -126,8 +118,16 @@ class Circle extends Shape {
 	}
 
 	overlapsPoint(pt) {
-		return this.containsPoint(pt)
-			|| this.intersectsPoint(pt);
+		return this.intersectsPoint(pt)
+			|| this.containsPoint(pt);
+	}
+
+	overlapsLine(ln) {
+		return this.intersectsLine(ln);
+	}
+
+	overlapsRay(ry) {
+		return this.intersectsRay(ry);
 	}
 
 	overlapsSegment(sg) {
@@ -142,7 +142,7 @@ class Circle extends Shape {
 	}
 
 	overlapsAABB(bx) {
-		this.overlapsPolygon(bx);
+		return this.overlapsPolygon(bx);
 	}
 
 	overlapsCircle(ce2) {

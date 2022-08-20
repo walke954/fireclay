@@ -133,7 +133,7 @@ class Segment extends Linear {
 	}
 
 	intersectsAABB(bx, getValues = false) {
-		this.intersectsPolygon(bx, getValues);
+		return this.intersectsPolygon(bx, getValues);
 	}
 
 	intersectsCircle(ce, getValues = false) {
@@ -175,7 +175,7 @@ class Segment extends Linear {
 	}
 
 	overlapsAABB(bx) {
-		return this.intersectsAABB(bx);
+		return bx.contains(this) || this.intersectsAABB(bx);
 	}
 
 	overlapsCircle(ce) {

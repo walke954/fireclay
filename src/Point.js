@@ -138,7 +138,7 @@ class Point extends Geometry {
 	}
 
 	overlapsCircle(ce) {
-		return ce.overlapsPoint(pt);
+		return ce.overlapsPoint(this);
 	}
 }
 

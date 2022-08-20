@@ -199,20 +199,24 @@ class Polygon extends Shape {
 		return this.containsPoint(pt);
 	}
 
-	overlapsPolygon(py2) {
-		const intersects = this.intersectsPolygon(py2);
+	overlapsPolygon(py) {
+		const intersects = this.intersectsPolygon(py);
 		if (intersects) {
 			return true;
 		}
 
-		let pt = py2.points[0];
+		let pt = py.points[0];
 		const contains = this.containsPoint(pt);
 		if (contains) {
 			return true;
 		}
 
 		pt = py.points[0];
-		return py2.containsPoint(pt);
+		return py.containsPoint(pt);
+	}
+
+	overlapsAABB(bx) {
+		return this.overlapsPolygon(bx);
 	}
 
 	overlapsCircle(ce) {
