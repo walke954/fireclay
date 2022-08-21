@@ -22,17 +22,24 @@ class SpaceTree extends AABB {
 		this.#set = new Set();
 		this.#children = [];
 		this.#leaf = true;
-		this.#size = 0;
 		this.#indivisible = w <= MIN_SIZE && h <= MIN_SIZE;
+	}
+
+	get size() {
+		return this.#set.size;
 	}
 
 	get copy() {
 		return this.copyToNew(this.#x, this.#y, this.#w, this.#h);
 	}
 
+	get isSpaceTree() {
+		return true;
+	}
+
 	#divide() {
 		const halfW = this.w / 2;
-		const halfH = this.w / 2;
+		const halfH = this.h / 2;
 
 		if (this.w * 2 < this.h) {
 			this.#children = [
@@ -101,23 +108,24 @@ class SpaceTree extends AABB {
 		}
 
 		this.#set.add(obj);
-		this.#size += 1;
 
-		if (this.#leaf) {
-			if (this.#indivisible || this.#size <= this.#bucketSize) {
-				return this;
-			}
-			this.#leaf = false;
-			this.#divide();
-			this.#set.forEach((g) => {
-				this.#children.forEach((child) => {
-					child.add(g);
-				});
+		if (!this.#leaf) {
+			this.#children.forEach((child) => {
+				child.add(obj);
 			});
+			return this;
 		}
 
+		if (this.#indivisible || this.size <= this.#bucketSize) {
+			return this;
+		}
+
+		this.#leaf = false;
+		this.#divide();
 		this.#children.forEach((child) => {
-			child.add(obj);
+			this.#set.forEach((g) => {
+				child.add(g);
+			});
 		});
 
 		return this;
@@ -130,9 +138,8 @@ class SpaceTree extends AABB {
 		}
 
 		this.#set.delete(obj);
-		this.#size -= 1;
 
-		if (!this.#leaf && this.#size <= this.#bucketSize) {
+		if (!this.#leaf && this.size <= this.#bucketSize) {
 			this.#children = [];
 			this.#leaf = true;
 		}

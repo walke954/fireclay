@@ -1,26 +1,29 @@
-var Shape = require('./Shape.js');
-var Point = require('./Point.js');
-var Ray = require('./Ray.js');
-var Segment = require('./Segment.js');
+const Geometry = require('./Geometry.js');
+const Shape = require('./Shape.js');
+const Point = require('./Point.js');
+const Ray = require('./Ray.js');
+const Segment = require('./Segment.js');
 
 class Polygon extends Shape {
 	#points;
 	#segments;
 
 	constructor(...args) {
-		const [x, y] = args
-			.reduce((pos, pt) => [pos[0] + pt.x, pos[1] + pt.y], [0, 0])
-			.map(v => v / args.length);
-
-		super(x, y);
-
 		if (args.length === 1) {
 			const [py] = args;
+
+			super(py.center.x, py.center.y);
 
 			this.#points = py.points;
 			this.#segments = py.segments;
 			return;
 		}
+
+		const [x, y] = args
+			.reduce((pos, pt) => [pos[0] + pt.x, pos[1] + pt.y], [0, 0])
+			.map(v => v / args.length);
+
+		super(x, y);
 
 		let points = null;
 		if (Array.isArray(args[0])) {
@@ -121,6 +124,10 @@ class Polygon extends Shape {
 	}
 
 	containsPoint(pt) {
+		if (pt.intersectsPolygon(this)) {
+			return true;
+		}
+
 		let ry = null;
 		for (let i = 0; i < this.segments.length; i += 1) {
 			const mpt = this.segments[i].midpoint;
@@ -129,7 +136,7 @@ class Polygon extends Shape {
 			let intersects = false;
 			for (let j = 0; j < this.points.length; j += 1) {
 				const pt2 = this.points[j];
-				if (!!pt2.intersectsRay(ry)) {
+				if (pt2.intersectsRay(ry)) {
 					intersects = true;
 					break;
 				}
@@ -211,7 +218,7 @@ class Polygon extends Shape {
 			return true;
 		}
 
-		pt = py.points[0];
+		pt = this.points[0];
 		return py.containsPoint(pt);
 	}
 

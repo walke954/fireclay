@@ -46,6 +46,33 @@ class Linear extends Geometry {
 	get isLinear() {
 		return true;
 	}
+
+	equals(ln) {
+		let f = null;
+		const allkeys = ['a', 'b', 'c'];
+
+		for (let i = 0; i < allkeys.length; i += 1) {
+			const k = allkeys[i];
+			if (this[k] === 0 && ln[k] === 0) {
+				continue;
+			}
+
+			if (this[k] === 0 && ln[k] !== 0) {
+				return false;
+			}
+
+			if (f === null) {
+				f = this[k] / ln[k];
+				continue;
+			}
+
+			if (this[k] / ln[k] !== f) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
 
 module.exports = Linear;

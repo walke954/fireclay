@@ -87,6 +87,10 @@ class Geometry {
 		return false;
 	}
 
+	get isSpaceTree() {
+		return false;
+	}
+
 	intersectsAABB(g) {
 		return false;
 	}

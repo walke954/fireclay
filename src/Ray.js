@@ -52,6 +52,13 @@ class Ray extends Linear {
 		return true;
 	}
 
+	equals(ry) {
+		return super.equals(ry)
+			&& this.origin.equals(ry.origin)
+			&& Geometry.equalTo(this.signX, ry.signX)
+			&& Geometry.equalTo(this.signY, ry.signY);
+	}
+
 	intersectsPoint(pt, getValues = false) {
 		return pt.intersectsRay(this, getValues);
 	}

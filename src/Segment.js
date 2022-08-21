@@ -72,6 +72,14 @@ class Segment extends Linear {
 		return true;
 	}
 
+	equals(sg) {
+		return super.equals(sg)
+			&& Geometry.equalTo(this.minX, sg.minX)
+			&& Geometry.equalTo(this.minY, sg.minY)
+			&& Geometry.equalTo(this.maxX, sg.maxX)
+			&& Geometry.equalTo(this.maxY, sg.maxY);
+	}
+
 	intersectsPoint(pt, getValues = false) {
 		return pt.intersectsSegment(this, getValues);
 	}
@@ -163,10 +171,6 @@ class Segment extends Linear {
 	}
 
 	overlapsSegment(sg) {
-		const equal = this.line.equals(sg.line);
-		if (equal) {
-			
-		}
 		return this.intersectsSegment(sg);
 	}
 

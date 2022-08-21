@@ -67,11 +67,12 @@ class Line extends Linear {
 			return getValues ? null : false;
 		}
 
+		pt = pt[0];
 		if (pt.isLine) {
 			return getValues ? [sg.copy] : true;
 		}
 
-		return pt[0].intersectsSegment(sg, getValues);
+		return pt.intersectsSegment(sg, getValues);
 	}
 
 	intersectsPolygon(py, getValues = false) {
@@ -102,11 +103,6 @@ class Line extends Linear {
 			(this.b * ce.x) + (-this.a * ce.y)
 		);
 
-		if (!perp.intersectsLine(this, true)) {
-			console.log('hi')
-			console.log(perp.a, perp.b, perp.c)
-			console.log(this.a, this.b, this.c)
-		}
 		const [inter] = perp.intersectsLine(this, true);
 
 		const d = Geometry.pythdist(inter.x, inter.y, ce.x, ce.y);
