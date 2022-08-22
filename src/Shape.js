@@ -1,5 +1,5 @@
-var Geometry = require('./Geometry.js');
-var Point = require('./Point.js');
+const Geometry = require('./Geometry.js');
+const Point = require('./Point.js');
 
 class Shape extends Geometry {
 	#x;

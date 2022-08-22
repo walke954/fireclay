@@ -1,6 +1,6 @@
-var Geometry = require('./Geometry.js');
-var Linear = require('./Linear.js');
-var Point = require('./Point.js');
+const Geometry = require('./Geometry.js');
+const Linear = require('./Linear.js');
+const Point = require('./Point.js');
 
 class Line extends Linear {
 	constructor(...args) {

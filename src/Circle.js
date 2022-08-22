@@ -1,6 +1,6 @@
-var Geometry = require('./Geometry.js');
-var Shape = require('./Shape.js');
-var Point = require('./Point.js');
+const Geometry = require('./Geometry.js');
+const Shape = require('./Shape.js');
+const Point = require('./Point.js');
 
 class Circle extends Shape {
 	#r;

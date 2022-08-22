@@ -1,7 +1,7 @@
-var Geometry = require('./Geometry.js');
-var Linear = require('./Linear.js');
-var Point = require('./Point.js');
-var Line = require('./Line.js');
+const Geometry = require('./Geometry.js');
+const Linear = require('./Linear.js');
+const Point = require('./Point.js');
+const Line = require('./Line.js');
 
 class Segment extends Linear {
 	#minX;

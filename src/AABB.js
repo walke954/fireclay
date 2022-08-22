@@ -1,6 +1,6 @@
-var Geometry = require('./Geometry.js');
-var Point = require('./Point.js');
-var Polygon = require('./Polygon.js');
+const Geometry = require('./Geometry.js');
+const Point = require('./Point.js');
+const Polygon = require('./Polygon.js');
 
 class AABB extends Polygon {
 	#x;
