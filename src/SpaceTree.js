@@ -42,6 +42,10 @@ class SpaceTree extends AABB {
 		return true;
 	}
 
+	get items() {
+		return Array.from(Object.values(this.#set));
+	}
+
 	#divide() {
 		const halfW = this.w / 2;
 		const halfH = this.h / 2;
@@ -126,9 +130,8 @@ class SpaceTree extends AABB {
 		}
 
 		let contained = true;
-		const setArr = Array.from(Object.values(this.#set));
-		for (let i = 0; i < setArr.length; i += 1) {
-			if (!setArr[i].contains(this)) {
+		for (let i = 0; i < this.items.length; i += 1) {
+			if (!this.items[i].contains(this)) {
 				contained = false;
 			}
 		}
