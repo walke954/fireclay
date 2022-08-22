@@ -100,7 +100,7 @@ class Circle extends Shape {
 		for (let i = 0; i < py.points.length; i += 1) {
 			const pt = py.points[i];
 			const d = Geometry.pythdist(this.x, this.y, pt.x, pt.y);
-			if (d >= this.r) {
+			if (Geometry.greaterThenOrEqualTo(d, this.r)) {
 				return false;
 			}
 		}
@@ -136,9 +136,7 @@ class Circle extends Shape {
 	}
 
 	overlapsPolygon(py) {
-		return this.intersectsPolygon(py)
-			|| py.containsCircle(this)
-			|| this.containsPolygon(py);
+		return py.overlapsCircle(this);
 	}
 
 	overlapsAABB(bx) {
