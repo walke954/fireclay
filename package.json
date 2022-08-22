@@ -8,7 +8,8 @@
     "start": "node src/index.js",
     "test": "jasmine"
   },
-  "author": "Jonathan Walker",
+  "keywords": ["shapes", "collision", "geometry"],
+  "author": "Jonathan Walker <walkjo53@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "jasmine": "^4.3.0"
