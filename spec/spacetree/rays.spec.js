@@ -38,7 +38,8 @@ const rays = {
 
 describe('SpaceTree', () => {
   function rayTree() {
-    const tree = new SpaceTree(0, 0, 40, 40, 2);
+    const options = {bucketSize: 2};
+    const tree = new SpaceTree(0, 0, 40, 40, options);
 
     Object.values(rays).forEach((ry) => {
       tree.add(ry);

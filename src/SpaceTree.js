@@ -1,8 +1,6 @@
 const AABB = require('./AABB.js');
 const Geometry = require('./Geometry.js');
 
-const MIN_SIZE = 1;
-
 class SpaceTree extends AABB {
 	#x;
 	#y;
@@ -14,15 +12,22 @@ class SpaceTree extends AABB {
 	#leaf;
 	#size;
 	#indivisible;
+	#options;
 
-	constructor(x, y, w, h, bucketSize = 4) {
+	constructor(x, y, w, h, options = {}) {
 		super(x, y, w, h);
 
+		const {
+			bucketSize = 4,
+			minSize
+		} = options;
+
+		this.#options = options;
 		this.#bucketSize = bucketSize;
 		this.#set = new Set();
 		this.#children = [];
 		this.#leaf = true;
-		this.#indivisible = w <= MIN_SIZE && h <= MIN_SIZE;
+		this.#indivisible = minSize ? w <= minSize && h <= minSize : false;
 	}
 
 	get size() {
@@ -46,12 +51,12 @@ class SpaceTree extends AABB {
 				new SpaceTree(
 					this.x, this.y,
 					this.w, halfH,
-					this.#bucketSize
+					this.#options
 				),
 				new SpaceTree(
 					this.x, this.y + halfH,
 					this.w, halfH,
-					this.#bucketSize
+					this.#options
 				),
 			];
 			return;
@@ -62,12 +67,12 @@ class SpaceTree extends AABB {
 				new SpaceTree(
 					this.x, this.y,
 					halfW, this.h,
-					this.#bucketSize
+					this.#options
 				),
 				new SpaceTree(
 					this.x + halfW, this.y,
 					halfW, this.h,
-					this.#bucketSize
+					this.#options
 				),
 			];
 			return;
@@ -77,22 +82,22 @@ class SpaceTree extends AABB {
 			new SpaceTree(
 				this.x, this.y,
 				halfW, halfH,
-				this.#bucketSize
+				this.#options
 			),
 			new SpaceTree(
 				this.x + halfW, this.y,
 				halfW, halfH,
-				this.#bucketSize
+				this.#options
 			),
 			new SpaceTree(
 				this.x + halfW, this.y + halfH,
 				halfW, halfH,
-				this.#bucketSize
+				this.#options
 			),
 			new SpaceTree(
 				this.x, this.y + halfH,
 				halfW, halfH,
-				this.#bucketSize
+				this.#options
 			),
 		];
 	}
@@ -117,6 +122,18 @@ class SpaceTree extends AABB {
 		}
 
 		if (this.#indivisible || this.size <= this.#bucketSize) {
+			return this;
+		}
+
+		let contained = true;
+		const setArr = Array.from(Object.values(this.#set));
+		for (let i = 0; i < setArr.length; i += 1) {
+			if (!setArr[i].contains(this)) {
+				contained = false;
+			}
+		}
+
+		if (contained) {
 			return this;
 		}
 

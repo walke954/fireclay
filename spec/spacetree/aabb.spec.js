@@ -20,7 +20,8 @@ const aabbs = {
 
 describe('SpaceTree', () => {
   function segmentTree() {
-    const tree = new SpaceTree(0, 0, 40, 40, 2);
+    const options = {bucketSize: 2};
+    const tree = new SpaceTree(0, 0, 40, 40, options);
 
     Object.values(aabbs).forEach((sg, i) => {
       tree.add(sg);
