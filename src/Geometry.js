@@ -2,41 +2,25 @@ const PRECISION = 10; // precision when comparing numbers
 const ERROR = 1 / (10 ** PRECISION);
 
 class Geometry {
-	static toPrecision(v, p) {
-		v = v.toPrecision(p);
-		return parseFloat(v, 10);
-	}
-
 	static equalTo(v1, v2) {
-		v1 = v1 < ERROR && v1 > -ERROR ? 0 : v1;
-		v2 = v2 < ERROR && v2 > -ERROR ? 0 : v2;
-		v1 = Geometry.toPrecision(v1, PRECISION);
-		v2 = Geometry.toPrecision(v2, PRECISION);
-		return v1 === v2;
+		const v = v1 - v2;
+		return v <= ERROR / 2 && v >= -ERROR / 2;
 	}
 
 	static greaterThen(v1, v2) {
-		v1 = Geometry.toPrecision(v1, PRECISION);
-		v2 = Geometry.toPrecision(v2, PRECISION);
-		return v1 > v2;
+		return v1 > v2 - ERROR;
 	}
 
 	static lessThen(v1, v2) {
-		v1 = Geometry.toPrecision(v1, PRECISION);
-		v2 = Geometry.toPrecision(v2, PRECISION);
-		return v1 < v2;
+		return v1 < v2 + ERROR;
 	}
 
 	static greaterThenOrEqualTo(v1, v2) {
-		v1 = Geometry.toPrecision(v1, PRECISION);
-		v2 = Geometry.toPrecision(v2, PRECISION);
-		return v1 >= v2;
+		return v1 >= v2 - ERROR;
 	}
 
 	static lessThenOrEqualTo(v1, v2) {
-		v1 = Geometry.toPrecision(v1, PRECISION);
-		v2 = Geometry.toPrecision(v2, PRECISION);
-		return v1 <= v2;
+		return v1 <= v2 + ERROR;
 	}
 
 	static pythdist(x1, y1, x2, y2) {
