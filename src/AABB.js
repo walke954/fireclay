@@ -44,13 +44,13 @@ class AABB extends Polygon {
 		return true;
 	}
 
-	intersectsAABB(bx, getValues = false) {
-		super.intersectsPolygon(bx, getValues);
-	}
-
 	containsAABB(bx) {
-		const containsX = this.x <= bx.x && this.x + this.w >= bx.x + bx.w;
-		const containsY = this.y <= bx.y && this.y + this.h >= bx.y + bx.h;
+		const containsX =
+			Geometry.lessThenOrEqualTo(this.x, bx.x)
+			&& Geometry.greaterThenOrEqualTo(this.x + this.w, bx.x + bx.w);
+		const containsY =
+			Geometry.lessThenOrEqualTo(this.y, bx.y)
+			&& Geometry.greaterThenOrEqualTo(this.y + this.h, bx.y + bx.h);
 		return containsX && containsY;
 	}
 
@@ -59,9 +59,7 @@ class AABB extends Polygon {
 	}
 
 	overlapsAABB(bx) {
-		const interX = this.x + this.w < bx.x || bx.x + bx.w < this.x;
-		const interY = this.y + this.h < bx.y || bx.y + bx.h < this.y;
-		return !interX || !interY;
+		return this.intersectsAABB(bx) || this.containsAABB(bx) || bx.containsAABB(this);
 	}
 }
 

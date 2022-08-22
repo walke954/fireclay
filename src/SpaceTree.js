@@ -122,6 +122,7 @@ class SpaceTree extends AABB {
 
 		this.#leaf = false;
 		this.#divide();
+
 		this.#children.forEach((child) => {
 			this.#set.forEach((g) => {
 				child.add(g);

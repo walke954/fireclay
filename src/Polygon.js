@@ -101,7 +101,7 @@ class Polygon extends Shape {
 	}
 
 	intersectsAABB(bx, getValues = false) {
-		this.intersectsPolygon(bx, getValues);
+		return this.intersectsPolygon(bx, getValues);
 	}
 
 	intersectsCircle(ce, getValues = false) {
