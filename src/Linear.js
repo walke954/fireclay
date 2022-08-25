@@ -1,4 +1,5 @@
 const Geometry = require('./Geometry.js');
+const Util = require('./Util.js');
 
 class Linear extends Geometry {
 	#a;
@@ -66,7 +67,7 @@ class Linear extends Geometry {
 				continue;
 			}
 
-			if (this[k] / ln[k] !== f) {
+			if (!Util.equalTo(this[k] / ln[k], f)) {
 				return false;
 			}
 		}

@@ -1,4 +1,5 @@
 const Geometry = require('./Geometry.js');
+const Util = require('./Util.js');
 const Shape = require('./Shape.js');
 const Point = require('./Point.js');
 
@@ -52,7 +53,7 @@ class Circle extends Shape {
 			return getValues ? null : false;
 		}
 
-		const d = Geometry.pythdist(this.x, this.y, ce.x, ce.y);
+		const d = Util.pythdist(this.x, this.y, ce.x, ce.y);
 		if (d >= this.r + ce.r || d <= Math.abs(this.r - ce.r)) {
 			return getValues ? null : false;
 		}
@@ -80,7 +81,7 @@ class Circle extends Shape {
 	}
 
 	containsPoint(pt) {
-		const d = Geometry.pythdist(this.x, this.y, pt.x, pt.y);
+		const d = Util.pythdist(this.x, this.y, pt.x, pt.y);
 		return d < this.r;
 	}
 
@@ -99,8 +100,8 @@ class Circle extends Shape {
 	containsPolygon(py) {
 		for (let i = 0; i < py.points.length; i += 1) {
 			const pt = py.points[i];
-			const d = Geometry.pythdist(this.x, this.y, pt.x, pt.y);
-			if (Geometry.greaterThenOrEqualTo(d, this.r)) {
+			const d = Util.pythdist(this.x, this.y, pt.x, pt.y);
+			if (Util.greaterThenOrEqualTo(d, this.r)) {
 				return false;
 			}
 		}
@@ -113,7 +114,7 @@ class Circle extends Shape {
 	}
 
 	containsCircle(ce) {
-		const d = Geometry.pythdist(this.x, this.y, ce.x, ce.y);
+		const d = Util.pythdist(this.x, this.y, ce.x, ce.y);
 		return d < Math.abs(this.r - ce.r);
 	}
 

@@ -1,4 +1,5 @@
 const Geometry = require('./Geometry.js');
+const Util = require('./Util.js');
 const Linear = require('./Linear.js');
 
 class Point extends Geometry {
@@ -18,7 +19,7 @@ class Point extends Geometry {
 	}
 
 	equals(pt) {
-		return Geometry.equalTo(this.x, pt.x) && Geometry.equalTo(this.y, pt.y);
+		return Util.equalTo(this.x, pt.x) && Util.equalTo(this.y, pt.y);
 	}
 
 	intersectsPoint(pt2, getValues = false) {
@@ -28,7 +29,7 @@ class Point extends Geometry {
 	}
 
 	intersectsLine(ln, getValues = false) {
-		const intersects = Geometry.equalTo((ln.a * this.x) + (ln.b * this.y), ln.c);
+		const intersects = Util.equalTo((ln.a * this.x) + (ln.b * this.y), ln.c);
 		if (!getValues) return intersects;
 		return intersects ? [this.copy] : null;
 	}
@@ -42,12 +43,12 @@ class Point extends Geometry {
 		interPt = interPt[0];
 
 		const interX = ry.signX < 0
-			? Geometry.greaterThenOrEqualTo(ry.origin.x, interPt.x)
-			: Geometry.lessThenOrEqualTo(ry.origin.x, interPt.x);
+			? Util.greaterThenOrEqualTo(ry.origin.x, interPt.x)
+			: Util.lessThenOrEqualTo(ry.origin.x, interPt.x);
 
 		const interY = ry.signY < 0
-			? Geometry.greaterThenOrEqualTo(ry.origin.y, interPt.y)
-			: Geometry.lessThenOrEqualTo(ry.origin.y, interPt.y);
+			? Util.greaterThenOrEqualTo(ry.origin.y, interPt.y)
+			: Util.lessThenOrEqualTo(ry.origin.y, interPt.y);
 
 		const intersects = interX && interY;
 
@@ -64,11 +65,11 @@ class Point extends Geometry {
 		interPt = interPt[0].copy;
 
 		const interX =
-			Geometry.greaterThenOrEqualTo(interPt.x, sg.minX)
-			&& Geometry.lessThenOrEqualTo(interPt.x, sg.maxX);
+			Util.greaterThenOrEqualTo(interPt.x, sg.minX)
+			&& Util.lessThenOrEqualTo(interPt.x, sg.maxX);
 		const interY =
-			Geometry.greaterThenOrEqualTo(interPt.y, sg.minY)
-			&& Geometry.lessThenOrEqualTo(interPt.y, sg.maxY);
+			Util.greaterThenOrEqualTo(interPt.y, sg.minY)
+			&& Util.lessThenOrEqualTo(interPt.y, sg.maxY);
 
 		const intersects = interX && interY;
 
@@ -103,8 +104,8 @@ class Point extends Geometry {
 	}
 
 	intersectsCircle(ce, getValues = false) {
-		const d = Geometry.pythdist(ce.x, ce.y, this.x, this.y);
-		const intersects = Geometry.equalTo(d, ce.r);
+		const d = Util.pythdist(ce.x, ce.y, this.x, this.y);
+		const intersects = Util.equalTo(d, ce.r);
 		if (getValues) {
 			return intersects ? [this.copy] : null;
 		}

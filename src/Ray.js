@@ -1,4 +1,5 @@
 const Geometry = require('./Geometry.js');
+const Util = require('./Util.js');
 const Linear = require('./Linear.js');
 const Point = require('./Point.js');
 const Line = require('./Line.js');
@@ -55,8 +56,8 @@ class Ray extends Linear {
 	equals(ry) {
 		return super.equals(ry)
 			&& this.origin.equals(ry.origin)
-			&& Geometry.equalTo(this.signX, ry.signX)
-			&& Geometry.equalTo(this.signY, ry.signY);
+			&& Util.equalTo(this.signX, ry.signX)
+			&& Util.equalTo(this.signY, ry.signY);
 	}
 
 	intersectsPoint(pt, getValues = false) {
@@ -97,8 +98,8 @@ class Ray extends Linear {
 		g = g[0];
 		if (g.isSegment) {
 			const noOriginInter =
-				Geometry.greaterThen(this.origin.x, g.maxX)
-				|| Geometry.lessThen(this.origin.x, g.minX)
+				Util.greaterThen(this.origin.x, g.maxX)
+				|| Util.lessThen(this.origin.x, g.minX)
 			const noIntersect =
 				noOriginInter && Math.sign(g.minX - this.origin.x) !== this.signX;
 

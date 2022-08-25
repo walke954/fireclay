@@ -1,4 +1,3 @@
-const Geometry = require('./Geometry.js');
 const Shape = require('./Shape.js');
 const Point = require('./Point.js');
 const Ray = require('./Ray.js');

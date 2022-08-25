@@ -1,4 +1,5 @@
 const Geometry = require('./Geometry.js');
+const Util = require('./Util.js');
 const Point = require('./Point.js');
 const Polygon = require('./Polygon.js');
 
@@ -46,11 +47,11 @@ class AABB extends Polygon {
 
 	containsAABB(bx) {
 		const containsX =
-			Geometry.lessThenOrEqualTo(this.x, bx.x)
-			&& Geometry.greaterThenOrEqualTo(this.x + this.w, bx.x + bx.w);
+			Util.lessThenOrEqualTo(this.x, bx.x)
+			&& Util.greaterThenOrEqualTo(this.x + this.w, bx.x + bx.w);
 		const containsY =
-			Geometry.lessThenOrEqualTo(this.y, bx.y)
-			&& Geometry.greaterThenOrEqualTo(this.y + this.h, bx.y + bx.h);
+			Util.lessThenOrEqualTo(this.y, bx.y)
+			&& Util.greaterThenOrEqualTo(this.y + this.h, bx.y + bx.h);
 		return containsX && containsY;
 	}
 

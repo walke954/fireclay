@@ -1,4 +1,5 @@
 const Geometry = require('./Geometry.js');
+const Util = require('./Util.js');
 const Linear = require('./Linear.js');
 const Point = require('./Point.js');
 
@@ -30,7 +31,7 @@ class Line extends Linear {
 		const f = -(ln2.a / ln1.a);
 		const y1 = ((f * ln1.c) + ln2.c);
 		const y2 = ((f * ln1.b) + ln2.b);
-		if (Geometry.equalTo(y1, 0) && Geometry.equalTo(y2, 0)) {
+		if (Util.equalTo(y1, 0) && Util.equalTo(y2, 0)) {
 			return getValues ? [ln1.copy] : true;
 		}
 
@@ -105,15 +106,15 @@ class Line extends Linear {
 
 		const [inter] = perp.intersectsLine(this, true);
 
-		const d = Geometry.pythdist(inter.x, inter.y, ce.x, ce.y);
+		const d = Util.pythdist(inter.x, inter.y, ce.x, ce.y);
 
-		if (Geometry.greaterThen(d, ce.r)) {
+		if (Util.greaterThen(d, ce.r)) {
 			return getValues ? null : false;
 		} else if (!getValues) {
 			return true;
 		}
 
-		if (Geometry.equalTo(d, ce.r)) {
+		if (Util.equalTo(d, ce.r)) {
 			return [inter];
 		}
 

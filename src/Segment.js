@@ -1,4 +1,5 @@
 const Geometry = require('./Geometry.js');
+const Util = require('./Util.js');
 const Linear = require('./Linear.js');
 const Point = require('./Point.js');
 const Line = require('./Line.js');
@@ -74,10 +75,10 @@ class Segment extends Linear {
 
 	equals(sg) {
 		return super.equals(sg)
-			&& Geometry.equalTo(this.minX, sg.minX)
-			&& Geometry.equalTo(this.minY, sg.minY)
-			&& Geometry.equalTo(this.maxX, sg.maxX)
-			&& Geometry.equalTo(this.maxY, sg.maxY);
+			&& Util.equalTo(this.minX, sg.minX)
+			&& Util.equalTo(this.minY, sg.minY)
+			&& Util.equalTo(this.maxX, sg.maxX)
+			&& Util.equalTo(this.maxY, sg.maxY);
 	}
 
 	intersectsPoint(pt, getValues = false) {
@@ -101,8 +102,8 @@ class Segment extends Linear {
 		g = g[0];
 		if (g.isSegment) {
 			const noIntersect =
-				Geometry.greaterThen(this.minX, sg.maxX)
-				|| Geometry.lessThen(this.maxX, sg.minX);
+				Util.greaterThen(this.minX, sg.maxX)
+				|| Util.lessThen(this.maxX, sg.minX);
 
 			if (noIntersect) {
 				return getValues ? null : false;
