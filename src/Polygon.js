@@ -57,9 +57,15 @@ class Polygon extends Shape {
 
 		super(sumX / points.length, sumY / points.length);
 
+		const options = {branchFactor: 5};
+
 		if (args.length >= MIN_SPACE_TREE_LENGTH) {
-			this.#points = Geometry.createSpaceTree(minX, minY, maxX - minX, maxY - minY);
-			this.#segments = Geometry.createSpaceTree(minX, minY, maxX - minX, maxY - minY);
+			this.#points = Geometry.createSpaceTree(
+				minX, minY, maxX - minX, maxY - minY, options
+			);
+			this.#segments = Geometry.createSpaceTree(
+				minX, minY, maxX - minX, maxY - minY, options
+			);
 			points.forEach((pt) => {
 				this.#points.add(pt);
 			});
