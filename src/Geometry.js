@@ -1,6 +1,50 @@
 const PRECISION = 10; // precision when comparing numbers
 const ERROR = 1 / (10 ** PRECISION);
 
+const defaultGetters = [
+	['isAABB', false],
+	['isArc', false],
+	['isCircle', false],
+	['isGeometry', true],
+	['isLine', false],
+	['isLinear', false],
+	['isPoint', false],
+	['isPolygon', false],
+	['isRay', false],
+	['isSegment', false],
+	['isShape', false],
+	['isSpaceTree', false],
+];
+
+const defaultMethods = [
+	['intersectsAABB', false],
+	['intersectsArc', false],
+	['intersectsCircle', false],
+	['intersectsLine', false],
+	['intersectsPoint', false],
+	['intersectsPolygon', false],
+	['intersectsRay', false],
+	['intersectsSegment', false],
+	['containsAABB', false],
+	['containsArc', false],
+	['containsCircle', false],
+	['containsLine', false],
+	['containsPoint', false],
+	['containsPolygon', false],
+	['containsRay', false],
+	['containsSegment', false],
+	['overlapsAABB', false],
+	['overlapsArc', false],
+	['overlapsCircle', false],
+	['overlapsLine', false],
+	['overlapsPoint', false],
+	['overlapsPolygon', false],
+	['overlapsRay', false],
+	['overlapsSegment', false],
+	['triangulateOutline', []],
+	['triangulateFill', []],
+];
+
 class Geometry {
 	static equalTo(v1, v2) {
 		const v = v1 - v2;
@@ -27,257 +71,68 @@ class Geometry {
 		return Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
 	}
 
-	get isAABB() {
-		return false;
-	}
+	#getGeometryFunc(g, keyword, getValues) {
+		if (g.isShape) {
+			if (g.isAABB) {
+				return this[`${keyword}AABB`](g, getValues);
+			}
 
-	get isArc() {
-		return false;
-	}
+			if (g.isPolygon) {
+				return this[`${keyword}Polygon`](g, getValues);
+			}
 
-	get isCircle() {
-		return false;
-	}
+			if (g.isCircle) {
+				return this[`${keyword}Circle`](g, getValues);
+			}
+		}
 
-	get isGeometry() {
-		return true;
-	}
+		if (g.isLinear) {
+			if (g.isLine) {
+				return this[`${keyword}Line`](g, getValues);
+			}
 
-	get isLine() {
-		return false;
-	}
+			if (g.isRay) {
+				return this[`${keyword}Ray`](g, getValues);
+			}
 
-	get isLinear() {
-		return false;
-	}
+			if (g.isSegment) {
+				return this[`${keyword}Segment`](g, getValues);
+			}
+		}
 
-	get isPoint() {
-		return false;
-	}
+		if (g.isPoint) {
+			return this[`${keyword}Point`](g, getValues);
+		}
 
-	get isPolygon() {
-		return false;
-	}
-
-	get isRay() {
-		return false;
-	}
-
-	get isSegment() {
-		return false;
-	}
-
-	get isShape() {
-		return false;
-	}
-
-	get isSpaceTree() {
-		return false;
-	}
-
-	intersectsAABB(g) {
-		return false;
-	}
-
-	intersectsArc(g) {
-		return false;
-	}
-
-	intersectsCircle(g) {
-		return false;
-	}
-
-	intersectsLine(g) {
-		return false;
-	}
-
-	intersectsPoint(g) {
-		return false;
-	}
-
-	intersectsPolygon(g) {
-		return false;
-	}
-
-	intersectsRay(g) {
-		return false;
-	}
-
-	intersectsSegment(g) {
 		return false;
 	}
 
 	intersects(g, getValues = false) {
-		if (g.isShape) {
-			if (g.isAABB) {
-				return this.intersectsAABB(g, getValues);
-			}
-
-			if (g.isPolygon) {
-				return this.intersectsPolygon(g, getValues);
-			}
-
-			if (g.isCircle) {
-				return this.intersectsCircle(g, getValues);
-			}
-		}
-
-		if (g.isLinear) {
-			if (g.isLine) {
-				return this.intersectsLine(g, getValues);
-			}
-
-			if (g.isRay) {
-				return this.intersectsRay(g, getValues);
-			}
-
-			if (g.isSegment) {
-				return this.intersectsSegment(g, getValues);
-			}
-		}
-
-		if (g.isPoint) {
-			return this.intersectsPoint(g, getValues);
-		}
-
-		return false;
-	}
-
-	containsAABB(g) {
-		return false;
-	}
-
-	containsArc(g) {
-		return false;
-	}
-
-	containsCircle(g) {
-		return false;
-	}
-
-	containsLine(g) {
-		return false;
-	}
-
-	containsPoint(g) {
-		return false;
-	}
-
-	containsPolygon(g) {
-		return false;
-	}
-
-	containsRay(g) {
-		return false;
-	}
-
-	containsSegment(g) {
-		return false;
+		return this.#getGeometryFunc(g, 'intersects', getValues);
 	}
 
 	contains(g) {
-		if (g.isShape) {
-			if (g.isAABB) {
-				return this.containsAABB(g);
-			}
-
-			if (g.isPolygon) {
-				return this.containsPolygon(g);
-			}
-
-			if (g.isCircle) {
-				return this.containsCircle(g);
-			}
-		}
-
-		if (g.isLinear) {
-			if (g.isLine) {
-				return this.containsLine(g);
-			}
-
-			if (g.isRay) {
-				return this.containsRay(g);
-			}
-
-			if (g.isSegment) {
-				return this.containsSegment(g);
-			}
-		}
-
-		if (g.isPoint) {
-			return this.containsPoint(g);
-		}
-
-		return false;
-	}
-
-	overlapsAABB(g) {
-		return false;
-	}
-
-	overlapsArc(g) {
-		return false;
-	}
-
-	overlapsCircle(g) {
-		return false;
-	}
-
-	overlapsLine(g) {
-		return false;
-	}
-
-	overlapsPoint(g) {
-		return false;
-	}
-
-	overlapsPolygon(g) {
-		return false;
-	}
-
-	overlapsRay(g) {
-		return false;
-	}
-
-	overlapsSegment(g) {
-		return false;
+		return this.#getGeometryFunc(g, 'contains');
 	}
 
 	overlaps(g) {
-		if (g.isShape) {
-			if (g.isAABB) {
-				return this.overlapsAABB(g);
-			}
-
-			if (g.isPolygon) {
-				return this.overlapsPolygon(g);
-			}
-
-			if (g.isCircle) {
-				return this.overlapsCircle(g);
-			}
-		}
-
-		if (g.isLinear) {
-			if (g.isLine) {
-				return this.overlapsLine(g);
-			}
-
-			if (g.isRay) {
-				return this.overlapsRay(g);
-			}
-
-			if (g.isSegment) {
-				return this.overlapsSegment(g);
-			}
-		}
-
-		if (g.isPoint) {
-			return this.overlapsPoint(g);
-		}
-
-		return false;
+		return this.#getGeometryFunc(g, 'overlaps');
 	}
 }
+
+defaultGetters.forEach(([key, val]) => {
+	const descriptor = {
+		get: () => val
+	};
+	Object.defineProperty(Geometry.prototype, key, descriptor);
+});
+
+defaultMethods.forEach(([key, val]) => {
+	const descriptor = {
+		writable: true,
+		value: () => val
+	};
+	Object.defineProperty(Geometry.prototype, key, descriptor);
+});
 
 module.exports = Geometry;
