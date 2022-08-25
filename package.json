@@ -1,6 +1,6 @@
 {
   "name": "fireclay",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Library for basic shape composition and functions for intersections, overlaps, and containment",
   "main": "src/index.js",
   "test": "jasmine",
