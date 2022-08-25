@@ -159,24 +159,8 @@ class Segment extends Linear {
 		return pts.length ? pts : null;
 	}
 
-	overlapsPoint(pt) {
-		return this.intersectsPoint(pt);
-	}
-
-	overlapsLine(ln) {
-		return this.intersectsLine(ln);
-	}
-
-	overlapsRay(ry) {
-		return this.intersectsRay(ry);
-	}
-
-	overlapsSegment(sg) {
-		return this.intersectsSegment(sg);
-	}
-
 	overlapsPolygon(py) {
-		return this.intersectsPolygon(py);
+		return py.contains(this) || this.intersectsPolygon(py);
 	}
 
 	overlapsAABB(bx) {
@@ -184,7 +168,7 @@ class Segment extends Linear {
 	}
 
 	overlapsCircle(ce) {
-		return this.intersectsCircle(ce);
+		return ce.contains(this) || this.intersectsCircle(ce);
 	}
 }
 

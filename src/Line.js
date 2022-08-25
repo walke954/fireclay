@@ -147,34 +147,6 @@ class Line extends Linear {
 			),
 		];
 	}
-
-	overlapsPoint(pt) {
-		return this.intersectsPoint(pt);
-	}
-
-	overlapsLine(ln) {
-		return this.intersectsLine(ln);
-	}
-
-	overlapsRay(ry) {
-		return this.intersectsRay(ry);
-	}
-
-	overlapsSegment(sg) {
-		return this.intersectsSegment(sg);
-	}
-
-	overlapsPolygon(py) {
-		return this.intersectsPolygon(py);
-	}
-
-	overlapsAABB(bx) {
-		return this.intersectsPolygon(bx);
-	}
-
-	overlapsCircle(ce) {
-		return this.intersectsCircle(ce);
-	}
 }
 
 module.exports = Line;
