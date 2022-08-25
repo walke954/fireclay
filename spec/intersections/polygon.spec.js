@@ -176,9 +176,9 @@ describe('Polygon', () => {
     const interPt = py1.intersectsPolygon(py2, true);
     expect(interPt.length).toBe(2);
     expect(interPt[1]).toBeInstanceOf(Point);
-    expect(pt1.equals(interPt[1])).toBe(true);
+    expect(pt1.equals(interPt[0])).toBe(true);
     expect(interPt[0]).toBeInstanceOf(Point);
-    expect(pt2.equals(interPt[0])).toBe(true);
+    expect(pt2.equals(interPt[1])).toBe(true);
   });
 
   it('should not intersect polygon', () => {

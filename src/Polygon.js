@@ -1,7 +1,11 @@
+const Geometry = require('./Geometry.js');
 const Shape = require('./Shape.js');
 const Point = require('./Point.js');
 const Ray = require('./Ray.js');
 const Segment = require('./Segment.js');
+
+// only use a tree if length is greater than this value
+const MIN_SPACE_TREE_LENGTH = 5;
 
 class Polygon extends Shape {
 	#points;
@@ -18,39 +22,67 @@ class Polygon extends Shape {
 			return;
 		}
 
-		const [x, y] = args
-			.reduce((pos, pt) => [pos[0] + pt.x, pos[1] + pt.y], [0, 0])
-			.map(v => v / args.length);
-
-		super(x, y);
-
-		let points = null;
 		if (Array.isArray(args[0])) {
-			points = args[0];
-		} else {
-			points = args;
+			args = args[0];
 		}
 
-		this.#points = points.map(pt => pt.copy);
-
+		let minX = args[0].x;
+		let maxX = args[0].x;
+		let minY = args[0].y;
+		let maxY = args[0].y;
+		let sumX = 0;
+		let sumY = 0;
+		let det = 0;
 		const segments = [];
-		points.forEach((pt, i) => {
-			const nextPt = i === points.length - 1
-				? points[0]
-				: points[i + 1];
+		const points = [];
+		args.forEach((pt, i) => {
+			const nextPt = i === args.length - 1
+				? args[0]
+				: args[i + 1];
+
+			minX = pt.x < minX ? pt.x : minX;
+			maxX = pt.x > maxX ? pt.x : maxX;
+			minY = pt.y < minY ? pt.y : minY;
+			maxY = pt.y > maxY ? pt.y : maxY;
+
+			sumX += pt.x;
+			sumY += pt.y;
+
+			det += (nextPt.x - pt.x) / (nextPt.y + pt.y);
 
 			const s = new Segment(pt, nextPt);
 			segments.push(s);
+			points.push(pt.copy);
 		});
 
-		this.#segments = segments;
+		super(sumX / points.length, sumY / points.length);
+
+		if (args.length >= MIN_SPACE_TREE_LENGTH) {
+			this.#points = Geometry.createSpaceTree(minX, minY, maxX - minX, maxY - minY);
+			this.#segments = Geometry.createSpaceTree(minX, minY, maxX - minX, maxY - minY);
+			points.forEach((pt) => {
+				this.#points.add(pt);
+			});
+			segments.forEach((sg) => {
+				this.#segments.add(sg);
+			});
+		} else {
+			this.#points = points;
+			this.#segments = segments;
+		}
 	}
 
 	get points() {
+		if (this.#points.isSpaceTree) {
+			return this.#points.items;
+		}
 		return this.#points.map(pt => pt.copy);
 	}
 
 	get segments() {
+		if (this.#points.isSpaceTree) {
+			return this.#segments.items;
+		}
 		return this.#segments.map(sg => sg.copy);
 	}
 
@@ -63,32 +95,58 @@ class Polygon extends Shape {
 	}
 
 	intersectsPoint(pt, getValues = false) {
+		if (this.#segments.isSpaceTree) {
+			const sgs = this.#segments.search(pt);
+			return getValues ? pt.copy : !!sgs.size;
+		}
+
 		return pt.intersectsPolygon(this, getValues);
 	}
 
 	intersectsLine(ln, getValues = false) {
+		if (this.#segments.isSpaceTree) {
+			const sgs = this.#segments.search(ln);
+			if (!getValues) return !!sgs.size;
+			return getValues
+				? sgs.values().map(sg => sg.line.intersectsLine(ln)[0])
+				: true;
+		}
+
 		return ln.intersectsPolygon(this, getValues);
 	}
 
 	intersectsRay(ry, getValues = false) {
+		if (this.#segments.isSpaceTree) {
+			const sgs = this.#segments.search(ry);
+			if (!getValues) return !!sgs.size;
+			return getValues
+				? sgs.values().map(sg => sg.line.intersectsLine(ry.line)[0])
+				: true;
+		}
+
 		return ry.intersectsPolygon(this, getValues);
 	}
 
-	intersectsSegment(sg, getValues = false) {
-		return sg.intersectsPolygon(this, getValues);
+	intersectsSegment(sg1, getValues = false) {
+		if (this.#segments.isSpaceTree) {
+			const sgs = this.#segments.search(sg1);
+			if (!getValues) return !!sgs.size;
+			return getValues
+				? sgs.values().map(sg2 => sg2.line.intersectsLine(sg1.line)[0])
+				: true;
+		}
+
+		return sg1.intersectsPolygon(this, getValues);
 	}
 
 	intersectsPolygon(py, getValues = false) {
 		const points = [];
-		for (let i = 0; i < this.segments.length; i += 1) {
-			const s1 = this.segments[i];
-			for (let j = 0; j < py.segments.length; j += 1) {
-				const s2 = py.segments[j];
-				let pt = s1.intersectsSegment(s2, true);
-				if (pt) {
-					if (!getValues) return true;
-					points.push(...pt);
-				}
+		for (let i = 0; i < py.segments.length; i += 1) {
+			const sg = py.segments[i];
+			const sgs = this.intersectsSegment(sg, getValues);
+			if (sgs) {
+				if (!getValues) return true;
+				points.push(...sgs.values());
 			}
 		}
 
@@ -183,8 +241,7 @@ class Polygon extends Shape {
 	}
 
 	overlapsPoint(pt) {
-		return this.intersectsPoint(pt)
-			|| this.containsPoint(pt);
+		return this.containsPoint(pt);
 	}
 
 	overlapsLine(ln) {

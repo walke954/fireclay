@@ -43,7 +43,7 @@ class SpaceTree extends AABB {
 	}
 
 	get items() {
-		return Array.from(Object.values(this.#set));
+		return Array.from(this.#set.values());
 	}
 
 	#divide() {

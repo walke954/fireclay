@@ -133,8 +133,10 @@ class Point extends Geometry {
 	}
 
 	overlapsAABB(bx) {
-		const interX = bx.x < this.x && bx.x + bx.w > this.x;
-		const interY = bx.y < this.y && bx.y + bx.h > this.y;
+		const interX = Util.lessThenOrEqualTo(bx.x, this.x)
+			&& Util.greaterThenOrEqualTo(bx.x + bx.w, this.x);
+		const interY = Util.lessThenOrEqualTo(bx.y, this.y)
+			&& Util.greaterThenOrEqualTo(bx.y + bx.h, this.y);
 		return interX && interY;
 	}
 

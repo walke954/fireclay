@@ -155,7 +155,6 @@ describe('SpaceTree', () => {
     it('should overlap point', () => {
       const tree = segmentTree();
 
-      // point
       const vals = tree.search(new Point(32, 26));
       expect(vals.size).toBe(2);
       expect(vals.has(polygons['1'])).toBe(true);
