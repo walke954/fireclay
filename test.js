@@ -1,1 +1,0 @@
-const Geometry = require('./src/Geometry');
