@@ -218,4 +218,8 @@ class SpaceTree extends AABB {
 	}
 }
 
+Object.defineProperty(Geometry, 'createSpaceTree', {
+	value: (...args) => new SpaceTree(...args)
+});
+
 module.exports = SpaceTree;
